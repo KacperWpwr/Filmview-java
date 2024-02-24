@@ -15,6 +15,9 @@ import com.example.filmview.FilmStar.DTO.FilmStarDTO;
 import com.example.filmview.FilmStar.FilmStar;
 import com.example.filmview.FilmStar.FilmStarService;
 import com.example.filmview.Image.ImageService;
+import com.example.filmview.Rating.DTO.RatingListDTO;
+import com.example.filmview.Rating.RatingMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +35,7 @@ public class FilmService {
     private final ActorService actorService;
     private final DirectorService directorService;
 
+    @Transactional
     public FilmPageDTO createFilm(CreateFilmRequest request) {
 
         if(filmRepository.getFilmByTitle(request.title()) != null){
@@ -114,6 +118,7 @@ public class FilmService {
                 actorsDTO, directorsDTO);
     }
 
+    @Transactional
     public FilmPageDTO getFilmPage(Long id) {
         Film film = filmRepository.getFilmById(id);
         if(film == null){
@@ -135,6 +140,7 @@ public class FilmService {
                 film.getDescription(), film.getRating(),actors,direcors );
     }
 
+    @Transactional
     public FilmPreviewDTO getFilmPreview(Long id){
         Film film = filmRepository.getFilmById(id);
 
@@ -145,6 +151,7 @@ public class FilmService {
         return new FilmPreviewDTO(film.getTitle(), film.getId(), film.getRating());
     }
 
+    @Transactional
     public FilmListDTO getTopFilms(int quantity){
         List<Film> films = filmRepository.findAll();
 
@@ -159,7 +166,8 @@ public class FilmService {
             }
         });
 
-        List<Film> temp = films.subList(0, quantity<films.size()? quantity : films.size()-1);
+        List<Film> temp = films.subList(0, Math.min(quantity, films.size()));
+
 
         List<FilmPreviewDTO> output = temp.stream().map(film -> new FilmPreviewDTO(film.getTitle(), film.getId(), film.getRating())).toList();
 
@@ -172,5 +180,24 @@ public class FilmService {
         List<FilmPreviewDTO> output = films.stream().map(film -> new FilmPreviewDTO(film.getTitle(), film.getId(), film.getRating())).toList();
 
         return new FilmListDTO(output);
+    }
+
+    @Transactional
+    public Film getFilm(long id){
+        return filmRepository.getFilmById(id);
+    }
+
+    public Film saveFilm(Film film){
+        return filmRepository.save(film);
+    }
+
+    @Transactional
+    public RatingListDTO getFilmRatings(Long id) {
+        Film film = filmRepository.getFilmById(id);
+        if(film == null){
+            throw new ApplicationException("Film not found", 404);
+        }
+
+        return RatingMapper.mapRatingListDTO(film.getRatings());
     }
 }

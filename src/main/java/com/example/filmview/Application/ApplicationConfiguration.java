@@ -1,5 +1,7 @@
 package com.example.filmview.Application;
 
+import com.example.filmview.FilmStar.FilmStar;
+import com.example.filmview.FilmStar.FilmStarRepository;
 import com.example.filmview.User.User;
 import com.example.filmview.User.UserRepository;
 import com.example.filmview.User.UserRole;
@@ -13,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class ApplicationConfiguration {
     private final UserRepository userRepository;
+    private final FilmStarRepository filmStarRepository;
     private final PasswordEncoder encoder;
     @Bean
     public CommandLineRunner commandLineRunner(){
@@ -26,6 +29,13 @@ public class ApplicationConfiguration {
                     .build();
 
             userRepository.save(user);
+
+            FilmStar star = FilmStar.builder()
+                    .name("Joe")
+                    .lastname("Doe")
+                    .build();
+
+            star = filmStarRepository.save(star);
         };
     }
 

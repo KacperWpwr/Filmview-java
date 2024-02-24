@@ -26,7 +26,7 @@ public class FilmStar {
             strategy = GenerationType.SEQUENCE
     )
     @Id
-    private Long id;
+    private long id;
 
     @Column
     private String name;

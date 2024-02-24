@@ -5,6 +5,7 @@ import com.example.filmview.Film.DTO.FilmPageDTO;
 import com.example.filmview.Film.DTO.FilmPreviewDTO;
 import com.example.filmview.Film.Requests.CreateFilmRequest;
 import com.example.filmview.Image.ImageService;
+import com.example.filmview.Rating.DTO.RatingListDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +41,10 @@ public class FilmController {
     @GetMapping("/{id}/preview")
     public ResponseEntity<FilmPreviewDTO> getFilmPreview(@PathVariable Long id){
         return new ResponseEntity<>(filmService.getFilmPreview(id),HttpStatusCode.valueOf(200));
+    }
+    @GetMapping("/{id}/reviews")
+    public ResponseEntity<RatingListDTO> getFilmRatings(@PathVariable Long id){
+        return new ResponseEntity<>(filmService.getFilmRatings(id),HttpStatusCode.valueOf(200));
     }
 
 

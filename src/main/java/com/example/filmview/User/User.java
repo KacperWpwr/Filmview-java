@@ -1,11 +1,9 @@
 package com.example.filmview.User;
 
+import com.example.filmview.Rating.Rating;
 import com.fasterxml.jackson.annotation.JsonTypeId;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -38,6 +36,9 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private Boolean is_blocked;
+
+    @OneToMany(orphanRemoval = true, mappedBy = "rating_user")
+    private List<Rating> ratings;
 
 
     @Override

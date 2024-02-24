@@ -11,6 +11,6 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @NoArgsConstructor
 public class ActorId implements Serializable {
-    private Long filmStarId;
-    private Long filmId;
+    private long filmStarId;
+    private long filmId;
 }

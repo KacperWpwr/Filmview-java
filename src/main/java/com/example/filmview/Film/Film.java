@@ -3,9 +3,12 @@ package com.example.filmview.Film;
 import com.example.filmview.Actor.Actor;
 import com.example.filmview.Director.Director;
 import com.example.filmview.Image.Image;
+import com.example.filmview.Rating.Rating;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,7 +29,7 @@ public class Film {
             strategy = GenerationType.SEQUENCE
     )
     @Id
-    private Long id;
+    private long id;
 
     @Column(nullable = false)
     private String title;
@@ -42,7 +45,20 @@ public class Film {
     @OneToOne(orphanRemoval = true)
     private Image image;
 
+    @OneToMany(orphanRemoval = true, mappedBy = "rated_film", fetch = FetchType.EAGER)
+    private List<Rating> ratings;
+
+
+
+
     public Float getRating(){
-        return 0.00f;
+        float sum= 0.00f;
+        if (ratings == null ) return 0f;
+        if (ratings.isEmpty()) return 0f;
+
+        for(Rating r : ratings){
+            sum+=r.getRating();
+        }
+        return (float)Math.floor(sum/ratings.size()*100)/100;
     }
 }

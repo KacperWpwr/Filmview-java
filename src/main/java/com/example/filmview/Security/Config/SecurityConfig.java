@@ -50,6 +50,7 @@ public class SecurityConfig{
                         auth
                                 .requestMatchers("/api/filmstar/create","/api/film/create","/api/filmstar/*/add/picture")
                                 .hasAnyAuthority("ADMIN","HEAD_ADMIN")
+                                .requestMatchers("/api/ratings/add", "/api/user/rated/*").authenticated()
 //                                .requestMatchers("/api/auth/**","/api/film/*/display","/api/film/top/*",
 //                                        "/api/filmstar/all","/api/filmstar/*/display"
 //                                        ,"/api/film/all").permitAll()
