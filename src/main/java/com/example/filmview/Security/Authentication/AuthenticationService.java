@@ -6,7 +6,9 @@ import com.example.filmview.Security.Authentication.Requests.AuthenticateUserReq
 import com.example.filmview.Security.Authentication.Requests.CreateAdminRequest;
 import com.example.filmview.Security.Authentication.Requests.CreateUserRequest;
 import com.example.filmview.Security.Authentication.Requests.TokenDTO;
+import com.example.filmview.Security.JWT.IJWTService;
 import com.example.filmview.Security.JWT.JWTService;
+import com.example.filmview.User.IUserService;
 import com.example.filmview.User.User;
 import com.example.filmview.User.UserRole;
 import com.example.filmview.User.UserService;
@@ -15,13 +17,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationService {
-    private final UserService userService;
+@Transactional
+public class AuthenticationService implements IAuthenticationService{
+    private final IUserService userService;
     private final PasswordEncoder passwordEncoder;
-    private final JWTService jwtService;
+    private final IJWTService jwtService;
 
     public TokenDTO createUser(CreateUserRequest request) {
 

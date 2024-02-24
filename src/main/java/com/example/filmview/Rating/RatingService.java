@@ -3,9 +3,12 @@ package com.example.filmview.Rating;
 import com.example.filmview.Application.ApplicationException;
 import com.example.filmview.Film.Film;
 import com.example.filmview.Film.FilmService;
+import com.example.filmview.Film.IFilmService;
 import com.example.filmview.Rating.DTO.RatingListDTO;
 import com.example.filmview.Rating.Requests.AddRatingRequest;
+import com.example.filmview.Security.JWT.IJWTService;
 import com.example.filmview.Security.JWT.JWTService;
+import com.example.filmview.User.IUserService;
 import com.example.filmview.User.User;
 import com.example.filmview.User.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,14 +19,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 @RequiredArgsConstructor
-public class RatingService {
+@Transactional
+public class RatingService implements IRatingService{
     private final RatingRepository ratingRepository;
-    private final FilmService filmService;
-    private final UserService userService;
-    private final JWTService jwtService;
+    private final IFilmService filmService;
+    private final IUserService userService;
+    private final IJWTService jwtService;
 
 
-    @Transactional
+    @Override
     public RatingListDTO addRating(AddRatingRequest request, String token){
 
         String username = jwtService.extractUsername(token.substring(7));
@@ -55,7 +59,7 @@ public class RatingService {
         return RatingMapper.mapRatingListDTO(film.getRatings());
     }
 
-    @Transactional
+    @Override
     public boolean hasRated(Long film_id, String token){
         String username = jwtService.extractUsername(token.substring(7));
         System.out.println("Username: "+username);

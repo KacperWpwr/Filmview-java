@@ -4,6 +4,7 @@ import com.example.filmview.Film.DTO.FilmListDTO;
 import com.example.filmview.Film.DTO.FilmPageDTO;
 import com.example.filmview.Film.DTO.FilmPreviewDTO;
 import com.example.filmview.Film.Requests.CreateFilmRequest;
+import com.example.filmview.Image.IImageService;
 import com.example.filmview.Image.ImageService;
 import com.example.filmview.Rating.DTO.RatingListDTO;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,8 @@ import java.util.List;
 @RequestMapping("/api/film")
 @RequiredArgsConstructor
 public class FilmController {
-    private final FilmService filmService;
-    private final ImageService imageService;
+    private final IFilmService filmService;
+    private final IImageService imageService;
 
     @PostMapping("/create")
     public ResponseEntity<FilmPageDTO> createFilm(@RequestBody CreateFilmRequest request){

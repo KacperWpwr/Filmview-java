@@ -4,6 +4,7 @@ package com.example.filmview.FilmStar;
 import com.example.filmview.FilmStar.DTO.FilmStarDTO;
 import com.example.filmview.FilmStar.DTO.FilmStarListDTO;
 import com.example.filmview.FilmStar.Requests.CreateFilmStarRequest;
+import com.example.filmview.Image.IImageService;
 import com.example.filmview.Image.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,8 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/filmstar")
 @RequiredArgsConstructor
 public class FilmStarController {
-    private final FilmStarService filmStarService;
-    private final ImageService imageService;
+    private final IFilmStarService filmStarService;
+    private final IImageService imageService;
 
     @PostMapping("/create")
     public ResponseEntity<FilmStarDTO> addFilmStar(@RequestBody CreateFilmStarRequest request){

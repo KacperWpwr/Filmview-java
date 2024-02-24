@@ -3,10 +3,12 @@ package com.example.filmview.Film;
 import com.example.filmview.Actor.Actor;
 import com.example.filmview.Actor.ActorId;
 import com.example.filmview.Actor.ActorService;
+import com.example.filmview.Actor.IActorService;
 import com.example.filmview.Application.ApplicationException;
 import com.example.filmview.Director.Director;
 import com.example.filmview.Director.DirectorId;
 import com.example.filmview.Director.DirectorService;
+import com.example.filmview.Director.IDirectorService;
 import com.example.filmview.Film.DTO.FilmListDTO;
 import com.example.filmview.Film.DTO.FilmPageDTO;
 import com.example.filmview.Film.DTO.FilmPreviewDTO;
@@ -14,12 +16,14 @@ import com.example.filmview.Film.Requests.CreateFilmRequest;
 import com.example.filmview.FilmStar.DTO.FilmStarDTO;
 import com.example.filmview.FilmStar.FilmStar;
 import com.example.filmview.FilmStar.FilmStarService;
+import com.example.filmview.FilmStar.IFilmStarService;
+import com.example.filmview.Image.IImageService;
 import com.example.filmview.Image.ImageService;
 import com.example.filmview.Rating.DTO.RatingListDTO;
 import com.example.filmview.Rating.RatingMapper;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,14 +32,15 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class FilmService {
+@Transactional
+public class FilmService implements IFilmService {
     private final FilmRepository filmRepository;
-    private final ImageService imageService;
-    private final FilmStarService filmStarService;
-    private final ActorService actorService;
-    private final DirectorService directorService;
+    private final IImageService imageService;
+    private final IFilmStarService filmStarService;
+    private final IActorService actorService;
+    private final IDirectorService directorService;
 
-    @Transactional
+    @Override
     public FilmPageDTO createFilm(CreateFilmRequest request) {
 
         if(filmRepository.getFilmByTitle(request.title()) != null){
@@ -118,7 +123,7 @@ public class FilmService {
                 actorsDTO, directorsDTO);
     }
 
-    @Transactional
+    @Override
     public FilmPageDTO getFilmPage(Long id) {
         Film film = filmRepository.getFilmById(id);
         if(film == null){
@@ -140,7 +145,8 @@ public class FilmService {
                 film.getDescription(), film.getRating(),actors,direcors );
     }
 
-    @Transactional
+
+    @Override
     public FilmPreviewDTO getFilmPreview(Long id){
         Film film = filmRepository.getFilmById(id);
 
@@ -151,7 +157,7 @@ public class FilmService {
         return new FilmPreviewDTO(film.getTitle(), film.getId(), film.getRating());
     }
 
-    @Transactional
+    @Override
     public FilmListDTO getTopFilms(int quantity){
         List<Film> films = filmRepository.findAll();
 
@@ -174,6 +180,7 @@ public class FilmService {
         return new FilmListDTO(output);
     }
 
+    @Override
     public FilmListDTO getAllFilms() {
         List<Film> films = filmRepository.findAll();
 
@@ -182,16 +189,17 @@ public class FilmService {
         return new FilmListDTO(output);
     }
 
-    @Transactional
+    @Override
     public Film getFilm(long id){
         return filmRepository.getFilmById(id);
     }
 
+    @Override
     public Film saveFilm(Film film){
         return filmRepository.save(film);
     }
 
-    @Transactional
+    @Override
     public RatingListDTO getFilmRatings(Long id) {
         Film film = filmRepository.getFilmById(id);
         if(film == null){

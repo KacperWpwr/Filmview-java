@@ -14,12 +14,15 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ImageService {
+@Transactional
+public class ImageService implements IImageService{
     private final ImageRepository imageRepository;
     private final ResourceLoader resourceLoader;
+    @Override
     public Image saveImage(Image image){
         return imageRepository.save(image);
     }
+    @Override
     public void createImage(String image_id, MultipartFile file){
         try{
             Image image = new Image(image_id,file.getBytes(), file.getName());
@@ -29,11 +32,12 @@ public class ImageService {
         }
     }
 
-
+    @Override
     public Image getImageById(String id){
         return imageRepository.getReferenceById(id);
     }
-    @Transactional
+
+    @Override
     public byte[] getImageFileById(String id){
         Optional<Image> image = imageRepository.findById(id);
 
