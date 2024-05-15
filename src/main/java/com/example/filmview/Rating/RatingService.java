@@ -54,6 +54,8 @@ public class RatingService implements IRatingService{
 
         rating = ratingRepository.save(rating);
 
+        film.addRating(rating);
+
         film = filmService.saveFilm(film);
 
         return RatingMapper.mapRatingListDTO(film.getRatings());

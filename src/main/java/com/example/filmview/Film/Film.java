@@ -18,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Builder
+
 public class Film {
     @SequenceGenerator(
             name = "film_sequence",
@@ -49,7 +50,14 @@ public class Film {
     private List<Rating> ratings;
 
 
-
+    public void addRating(Rating rating){
+        if(ratings != null){
+            ratings.add(rating);
+        }else{
+            ratings = new ArrayList<>();
+            ratings.add(rating);
+        }
+    }
 
     public Float getRating(){
         float sum= 0.00f;

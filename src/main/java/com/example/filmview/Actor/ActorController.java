@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/auth")
+@RequestMapping("/api/actor")
 @RequiredArgsConstructor
 public class ActorController {
 }

@@ -2,8 +2,7 @@ package com.example.filmview.User;
 
 
 import com.example.filmview.Rating.IRatingService;
-import com.example.filmview.Rating.RatingService;
-import com.example.filmview.Security.Authentication.DTO.RatedDTO;
+import com.example.filmview.Rating.DTO.RatedDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

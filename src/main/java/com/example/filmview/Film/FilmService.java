@@ -40,6 +40,8 @@ public class FilmService implements IFilmService {
     private final IActorService actorService;
     private final IDirectorService directorService;
 
+
+
     @Override
     public FilmPageDTO createFilm(CreateFilmRequest request) {
 
@@ -159,6 +161,10 @@ public class FilmService implements IFilmService {
 
     @Override
     public FilmListDTO getTopFilms(int quantity){
+
+        if(quantity<1){
+            throw new ApplicationException("Quantity can't be below 1!", 401);
+        }
         List<Film> films = filmRepository.findAll();
 
         if (films.isEmpty()){
@@ -168,7 +174,7 @@ public class FilmService implements IFilmService {
         Collections.sort(films, new Comparator<Film>() {
             @Override
             public int compare(Film o1, Film o2) {
-                return o1.getRating().compareTo(o2.getRating());
+                return o2.getRating().compareTo(o1.getRating());
             }
         });
 

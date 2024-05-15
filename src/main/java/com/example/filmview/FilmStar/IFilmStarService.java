@@ -7,7 +7,7 @@ import com.example.filmview.FilmStar.Requests.CreateFilmStarRequest;
 public interface IFilmStarService {
     FilmStar getFilmStarById(Long id);
     FilmStarDTO createFilmStar(CreateFilmStarRequest request);
-    FilmStarListDTO getAllFilmStars();
+    FilmStarListDTO getAllFilmStarsDTOs();
     FilmStar saveFilmStar(FilmStar filmStar);
     FilmStarDTO getFilmStarDisplay(Long id);
 }

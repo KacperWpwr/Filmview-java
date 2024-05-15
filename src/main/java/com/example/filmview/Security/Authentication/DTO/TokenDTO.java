@@ -1,4 +1,4 @@
-package com.example.filmview.Security.Authentication.Requests;
+package com.example.filmview.Security.Authentication.DTO;
 
 import lombok.Getter;
 

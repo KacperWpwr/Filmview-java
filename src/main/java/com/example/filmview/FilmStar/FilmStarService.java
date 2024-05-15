@@ -40,7 +40,7 @@ public class FilmStarService implements IFilmStarService{
     }
 
     @Override
-    public FilmStarListDTO getAllFilmStars(){
+    public FilmStarListDTO getAllFilmStarsDTOs(){
         List<FilmStar> stars = filmStarRepository.findAll();
 
 

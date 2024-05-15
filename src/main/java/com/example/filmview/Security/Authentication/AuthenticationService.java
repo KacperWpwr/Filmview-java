@@ -5,16 +5,13 @@ import com.example.filmview.Application.ApplicationException;
 import com.example.filmview.Security.Authentication.Requests.AuthenticateUserRequest;
 import com.example.filmview.Security.Authentication.Requests.CreateAdminRequest;
 import com.example.filmview.Security.Authentication.Requests.CreateUserRequest;
-import com.example.filmview.Security.Authentication.Requests.TokenDTO;
+import com.example.filmview.Security.Authentication.DTO.TokenDTO;
 import com.example.filmview.Security.JWT.IJWTService;
-import com.example.filmview.Security.JWT.JWTService;
 import com.example.filmview.User.IUserService;
 import com.example.filmview.User.User;
 import com.example.filmview.User.UserRole;
-import com.example.filmview.User.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +37,7 @@ public class AuthenticationService implements IAuthenticationService{
         User user = User.builder()
                 .login(request.email())
                 .email(request.email())
-                .password(passwordEncoder.encode(request.email()))
+                .password(passwordEncoder.encode(request.password()))
                 .role(UserRole.USER)
                 .is_enabled(true)
                 .is_blocked(false)
@@ -119,5 +116,15 @@ public class AuthenticationService implements IAuthenticationService{
         if(userService.getUserByUsername(request.login()) !=null){
             throw new ApplicationException("Login taken",410);
         }
+        User user = User.builder()
+                .login(request.login())
+                .password(passwordEncoder.encode(request.password()))
+                .role(UserRole.ADMIN)
+                .is_enabled(true)
+                .is_blocked(false)
+                .build();
+
+        userService.saveUser(user);
+
     }
 }

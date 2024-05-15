@@ -2,134 +2,95 @@ package com.example.filmview.Filmview.ServiceTests;
 
 
 import com.example.filmview.Film.Film;
-import com.example.filmview.Film.FilmService;
-import com.example.filmview.Film.Requests.CreateFilmRequest;
-import com.example.filmview.FilmStar.FilmStar;
-import com.example.filmview.FilmStar.FilmStarRepository;
-import com.example.filmview.FilmviewApplication;
+import com.example.filmview.Film.IFilmService;
+import com.example.filmview.Rating.DTO.RatingListDTO;
+import com.example.filmview.Rating.Rating;
+import com.example.filmview.Rating.RatingRepository;
 import com.example.filmview.Rating.RatingService;
 import com.example.filmview.Rating.Requests.AddRatingRequest;
-import com.example.filmview.Security.Authentication.AuthenticationService;
-import com.example.filmview.Security.JWT.JWTService;
+import com.example.filmview.Security.JWT.IJWTService;
+import com.example.filmview.User.IUserService;
 import com.example.filmview.User.User;
-import com.example.filmview.User.UserRepository;
 import com.example.filmview.User.UserRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
+import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.MOCK,
-        classes = FilmviewApplication.class
-)
+@ExtendWith(MockitoExtension.class)
 public class RatingTests {
+    @Mock
+    private RatingRepository ratingRepository;
+    @Mock
+    private IFilmService filmService;
+    @Mock
+    private IUserService userService;
+    @Mock
+    private IJWTService ijwtService;
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder encoder;
-    @Autowired
-    private AuthenticationService authenticationService;
-    @Autowired
-    private FilmService filmService;
-    @Autowired
-    private FilmStarRepository filmStarRepository;
-    @Autowired
+    @InjectMocks
     private RatingService ratingService;
-    @Autowired
-    private JWTService jwtService;
 
+
+    private Film testFilm;
+    private User testUser;
 
     @BeforeEach
-    public void fillDatabase(){
-        userRepository.deleteAll();
+    public void CreateTestObjects(){
+        System.out.println("Creating");
+        testFilm = Film.builder()
+                .ratings(new ArrayList<>())
+                .directors(new ArrayList<>())
+                .actors(new ArrayList<>())
+                .title("Test Film")
+                .description("Test Description")
+                .id(1l)
+                .build();
 
-        System.out.println("Adding users");
-        addMockUser("user1@gmail.com","12345");
-        addMockHeadAdmin();
-        createMockFilm();
-
-    }
-    public void addMockUser(String login, String password){
-        User user  = User.builder()
-                .email(login)
-                .login(login)
-                .password(encoder.encode(password))
+        testUser = User.builder()
+                .is_blocked(false)
+                .is_enabled(true)
                 .role(UserRole.USER)
-                .is_blocked(false)
-                .is_enabled(true)
+                .password("54321")
+                .email("testuser@gmail.com")
+                .login("testuser@gmail.com")
                 .build();
-
-        userRepository.save(user);
-    }
-    public void addMockHeadAdmin(){
-        User user  = User.builder()
-                .login("head_admin")
-                .password(encoder.encode("hadmin"))
-                .role(UserRole.HEAD_ADMIN)
-                .is_blocked(false)
-                .is_enabled(true)
-                .build();
-
-        userRepository.save(user);
-    }
-
-    public void createMockFilm(){
-        FilmStar actor = FilmStar.builder()
-                .name("Joe")
-                .lastname("Doe")
-                .build();
-        actor = filmStarRepository.save(actor);
-
-        FilmStar director = FilmStar.builder()
-                .name("Joe2")
-                .lastname("Doe2")
-                .build();
-        director = filmStarRepository.save(director);
-
-        CreateFilmRequest request = new CreateFilmRequest("film1",
-                "description1",
-                List.of(actor.getId()),
-                List.of(director.getId()));
-
-        filmService.createFilm(request);
-
-
-    }
-    @Test
-    public void m(){
 
     }
 
     @Test
-    public void AddRatingTest(){
-        AddRatingRequest ratingRequest = new AddRatingRequest(1l,
-                4, "description");
-        String token = jwtService.generateToken(userRepository.getByLogin("user1@gmail.com"));
-        token = "Bearer "+token;
+    public void AddRating_Success(){
+        AddRatingRequest request = new AddRatingRequest(1l,5,"description");
+        Rating rating = Rating.builder()
+                .rating(5)
+                .description("description")
+                .rated_film(testFilm)
+                .rating_user(testUser)
+                .Id(1)
+                .build();
 
-        System.out.println("#################");
-        System.out.println("Token: "+token);
-        System.out.println("#################");
+        when(ijwtService.extractUsername("token")).thenReturn("testuser@gmail.com");
+        when(filmService.getFilm(1)).thenReturn(testFilm);
+        when(filmService.saveFilm(Mockito.any(Film.class))).thenReturn(testFilm);
+        when(userService.getUserByUsername("testuser@gmail.com")).thenReturn(testUser);
+        when(ratingRepository.save(Mockito.any(Rating.class))).thenReturn(rating);
 
-        ratingService.addRating(ratingRequest,token);
+        RatingListDTO dto = ratingService.addRating(request,"Bearer token");
 
-        Film film = filmService.getFilm(1l);
+        assertThat(dto).isNotNull();
+        assertThat(dto.ratings()).isNotNull();
+        assertThat(dto.ratings().size()).isEqualTo(1);
 
-        assertEquals(1,film.getRatings().size());
-        Float expected = 4f;
-        assertEquals(expected, film.getRating());
     }
+
 
 }

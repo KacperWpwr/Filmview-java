@@ -36,11 +36,11 @@ public class FilmStar {
     @OneToOne(orphanRemoval = true)
     private Image image;
 
-    @OneToMany(orphanRemoval = true)
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<Actor> starredFilms;
 
 
-    @OneToMany(orphanRemoval = true)
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.REMOVE)
     private List<Director> directedFilms;
 
     public void addDirectedFilm(Director director){

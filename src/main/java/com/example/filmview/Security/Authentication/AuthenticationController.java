@@ -4,7 +4,7 @@ package com.example.filmview.Security.Authentication;
 import com.example.filmview.Security.Authentication.Requests.AuthenticateUserRequest;
 import com.example.filmview.Security.Authentication.Requests.CreateAdminRequest;
 import com.example.filmview.Security.Authentication.Requests.CreateUserRequest;
-import com.example.filmview.Security.Authentication.Requests.TokenDTO;
+import com.example.filmview.Security.Authentication.DTO.TokenDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;

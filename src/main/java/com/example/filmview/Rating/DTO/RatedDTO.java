@@ -1,4 +1,4 @@
-package com.example.filmview.Security.Authentication.DTO;
+package com.example.filmview.Rating.DTO;
 
 public record RatedDTO(Boolean rated) {
 }

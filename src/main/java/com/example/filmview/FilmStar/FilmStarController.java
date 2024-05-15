@@ -5,7 +5,6 @@ import com.example.filmview.FilmStar.DTO.FilmStarDTO;
 import com.example.filmview.FilmStar.DTO.FilmStarListDTO;
 import com.example.filmview.FilmStar.Requests.CreateFilmStarRequest;
 import com.example.filmview.Image.IImageService;
-import com.example.filmview.Image.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -41,7 +40,7 @@ public class FilmStarController {
 
     @GetMapping("/all")
     public ResponseEntity<FilmStarListDTO> getFilmStars(){
-        return new ResponseEntity<>(filmStarService.getAllFilmStars(),HttpStatusCode.valueOf(200));
+        return new ResponseEntity<>(filmStarService.getAllFilmStarsDTOs(),HttpStatusCode.valueOf(200));
     }
 
     @GetMapping("/{id}/display")
